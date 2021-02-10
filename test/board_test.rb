@@ -7,16 +7,18 @@ class BoardTest < Minitest::Test
 
   def setup
     @globe_1 = Globe.new('b')
-    @board = Board.new(@globe_1, 3)
+    @globe_2 = Globe.new('g')
+    @globe_3 = Globe.new('r')
+    @globe_4 = Globe.new('y')
+    @globes = [@globe_1, @globe_2, @globe_3, @globe_4]
+    @board = Board.new(@globes)
   end
 
   def test_it_exists
     assert_instance_of Board, @board
   end
 
-  # def test_it_has_attributes
-  # end
-  #
-  # def test_it_can_have_different_attributes
-  # end
+  def test_it_has_attributes
+    assert_equal @globes, @board.globes
+  end
 end
