@@ -1,3 +1,5 @@
+require './lib/board.rb'
+
 class Globe
   attr_reader :color
 
