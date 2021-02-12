@@ -2,6 +2,7 @@ class Game
     attr_reader :board,
                 :globe,
                 :turn,
+                :user_guess
   def initialize
     @board = Board.new
     @globe = Globe.new
@@ -27,6 +28,11 @@ class Game
 
 def play
   puts "PLAYYYY"
+  @user_guess = gets.chomp.downcase
+  #get our user input
+  #compare string input with secret code array
+  #run check methods
+  #
 end
 
 def read
