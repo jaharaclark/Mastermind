@@ -17,15 +17,26 @@ class Turn
     @has_won
   end
 
-  # def player_guess/guess/user_guess/whatever
-  # input = gets.chomp.downcase
-  # if input.length > 4
-  # puts "Please enter a valid code of 4 colors"
-  # else push to user_code array??
+  def check_code(key, guess)
+    key.globes.each_with_index do |ball, index|
+      guess.globes.each_with_index do |other_ball, other_index|
+        if ball == other_ball && index == other_index
+        @exact_counter += 1
+      end
+      end
+    end
+    @exact_counter
+  end
 
- #having trouble deciding what goes in game and what goes in turn.
- # check win lose conditions -> guess -> check guess against secret code -> output near/exact matches
- # -> ask for input -> repeat
 
-
+  def near_check(key, guess)
+    copy_of_secret_code = key
+    guess.globes.each do |color|
+      if copy_of_secret_code.globes.include?(color)
+          @near_counter += 1
+          copy_of_secret_code.globes.delete_at(copy_of_secret_code.globes.index(color))
+      end
+    end
+    result = @near_counter - @exact_counter
+  end
 end
