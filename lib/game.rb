@@ -1,17 +1,21 @@
 class Game
-    attr_reader :board,
-                :globe,
-                :turn,
-                :user_guess
+    # attr_reader :board,
+    #             :globe,
+    #             :turn,
+    #             :user_guess
   def initialize
-    @board = Board.new
-    @globe = Globe.new
-    @turn = Turn.new
+    # @board = Board.new
+    # @globe = Globe.new
+    # @turn = Turn.new
+    #secret code inheritss from turn
+    @start_time = Time.new
+    @possible_answers = ['r', 'g', 'b', 'y'].repeated_permutation(4).to_a
   end
 
   def start_game
     puts "Welcome to MASTERMIND \n" +
     "Would you like to (p)lay, read the (i)nstructions or (q)uit?"
+    puts ">"
 
     user_selection = gets.chomp.upcase
 
@@ -23,27 +27,43 @@ class Game
       quit
     else
       puts "I didn't understand your selection. Will you please try again?"
+      start_game
     end
   end
 
 def play
   puts "PLAYYYY"
-  @user_guess = gets.chomp.downcase
-  #get our user input
-  #compare string input with secret code array
-  #run check methods
-  #
+  puts ">"
+  @user_code = gets.chomp.downcase
+  if user_code == "q" || user_code == "quit"
+  quit
+  else
+    turn = Turn.new(secet_code, user_code)
+    if @user_code == "c" || @user_guess == "cheat"
+      puts  "The secret code is '#{@secret_code.join()}'"
+    elsif @user_code.#method for checking length
+      puts "Invalid input, please ensure your guess is 4 characters and limted to the available colors"
+    else
+      #turn.check_code
+      #turn.near_check
+    end
+  end
+  #was it an exact match? yes - win condition statement
+  #no?
+  #call another turn
+end
 end
 
 def read
   puts "READDDD"
+  start_game
 end
 
 def quit
-  puts "ENDEEE"
+  puts "Goodbye!"
+  exit
 end
 
-end
 
 
 

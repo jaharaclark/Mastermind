@@ -4,7 +4,7 @@ require './lib/board'
 
 class Game
   attr_reader :user_guess, :secret_code, :exact_counter, :near_counter, :copy_of_secret_code
-  
+
   def initialize
     @secret_code ||= generate_secret_code
     @exact_counter = 0
@@ -14,7 +14,7 @@ class Game
   def generate_secret_code
     code_to_break = []
     colors = ['b', 'g', 'r', 'y']
-      4.times do 
+      4.times do
         code_to_break << colors.shuffle
       end
     return code_to_break.flatten.shuffle[0..3]
@@ -48,7 +48,7 @@ class Game
       puts "Give me p or i or q. That's it."
       start_game
     end
-  end 
+  end
 
   def play
   explain_colors
@@ -75,7 +75,7 @@ class Game
       start_game
     else
       check_length
-    end 
+    end
   end
 
   def check_length
@@ -104,21 +104,21 @@ class Game
     end
   end
 
-  def check_near_match 
-    copy_of_secret_code = @secret_code
+  def check_near_match
+    copy_of_secret_code = @secret_code.dup
+
     @user_guess.each do |color|
       if copy_of_secret_code.include?(color)
         @near_counter += 1
-        # copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
+        copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
       end
     end
     puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions."
-    require 'pry'; binding.pry
     near_counter_reset
     exact_counter_reset
-    
+
   end
-  
+
   def near_counter_reset
     @near_counter = 0
   end
