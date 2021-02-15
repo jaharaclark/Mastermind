@@ -3,7 +3,11 @@ require './lib/globe'
 require './lib/board'
 
 class Game
-  attr_reader :user_guess, :secret_code, :exact_counter, :near_counter, :copy_of_secret_code
+  attr_reader :user_guess,
+              :secret_code,
+              :exact_counter,
+              :near_counter,
+              :copy_of_secret_code
 
   def initialize
     @secret_code ||= generate_secret_code
@@ -105,7 +109,7 @@ class Game
   end
 
   def check_near_match
-    copy_of_secret_code = @secret_code.dup
+    copy_of_secret_code = @secret_code.dup  #This is the crux of the issue right here.
 
     @user_guess.each do |color|
       if copy_of_secret_code.include?(color)
@@ -127,3 +131,12 @@ class Game
     @exact_counter = 0
   end
 end
+
+
+# reference to line 108: so some basic types of object in ruby are passed "by value",
+# meaning that if you run x = 123 then y = x, x and y will point to physically different addresses in your computer's memory
+# the value for x will occupy one space, and the value for y will occupy another
+# this is the case for true, false, nil, numbers, and symbols (symbols look like this: :symbol)
+# but for all other types of object, they're passed "by reference",
+# meaning that if you run x = [1, 2, 3] then y = x, x and y will point to the same address in memory
+# so modifying that array by calling x.delete_at(…) is the same as modifying that array by calling y.delete_at(…)
