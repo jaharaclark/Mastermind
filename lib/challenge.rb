@@ -10,12 +10,17 @@ class Game
               :copy_of_secret_code,
               :turn_counter,
               :difficulty_choice
+              :start_time,
+              :total_time
+
 
   def initialize
     @exact_counter = 0
     @near_counter = 0
     @turn_counter = 0
+    @start_time = Time.now
   end
+  
 
   def generate_easy_code
     code_to_break = []
@@ -24,6 +29,8 @@ class Game
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..3]
+    puts @secret_code.inspect
+    return @secret_code
   end
 
   def generate_medium_code
@@ -33,6 +40,8 @@ class Game
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..5]
+    puts @secret_code.inspect
+    return @secret_code
   end
 
   def generate_hard_code
@@ -42,6 +51,8 @@ class Game
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..7]
+    puts @secret_code.inspect
+    return @secret_code
   end
 
   def get_user_difficulty_choice
@@ -72,11 +83,23 @@ class Game
     until input == 'q' || input == 'quit' do
      do_something(input)
     end
-    
     end_game
   end
 
+  def start_time
+    @start_time
+  end
+
+  def end_time
+    @end_time = Time.now
+    @total_time = @end_time.to_i - @start_time.to_i
+    minutes = @total_time / 60
+    seconds = @total_time % 60
+    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds."
+  end
+
   def end_game
+    end_time
     puts "That's All Folks."
     exit!
   end
@@ -99,11 +122,12 @@ class Game
     if @turn_counter == 0
       get_user_difficulty_choice
       explain_colors
+      start_time
     end
-      query_user_guess
+    query_user_guess
   end
 
-   def explain_colors
+  def explain_colors
     case @difficulty_choice
     when 'e', 'easy'
       puts "I have generated a sequence with four elements made up of: (r)ed, (g)reen, (b)lue, (y)ellow. Please enter guesses of four total colors in the form of 'XXXX'. Use (q) at any time to end the game."
@@ -180,4 +204,3 @@ class Game
     @exact_counter = 0
   end
 end
-
