@@ -7,12 +7,14 @@ class Game
               :secret_code,
               :exact_counter,
               :near_counter,
-              :copy_of_secret_code
+              :copy_of_secret_code,
+              :turn_counter
 
   def initialize
     @secret_code ||= generate_secret_code
     @exact_counter = 0
     @near_counter = 0
+    @turn_counter = 0
   end
 
   def generate_secret_code
@@ -35,6 +37,13 @@ class Game
       end_game
   end
 
+  def start_time
+    @start_time
+  end
+
+  def end_time
+  end
+
   def end_game
     puts "That's All Folks."
     exit!
@@ -55,9 +64,12 @@ class Game
   end
 
   def play
-  explain_colors
-
-  query_user_guess
+    if @turn_counter == 0
+      explain_colors
+      query_user_guess
+    else
+      query_user_guess
+    end
   end
 
   def explain_colors
@@ -117,7 +129,8 @@ class Game
         copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
       end
     end
-    puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions."
+    @turn_counter += 1
+    puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
     near_counter_reset
     exact_counter_reset
 
