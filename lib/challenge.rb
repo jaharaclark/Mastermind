@@ -8,13 +8,16 @@ class Game
               :exact_counter,
               :near_counter,
               :copy_of_secret_code,
-              :turn_counter
+              :turn_counter,
+              :start_time,
+              :total_time
 
   def initialize
     @secret_code ||= generate_secret_code
     @exact_counter = 0
     @near_counter = 0
     @turn_counter = 0
+    @start_time = Time.now
   end
 
   def generate_secret_code
@@ -23,7 +26,9 @@ class Game
       4.times do
         code_to_break << colors.shuffle
       end
-    return code_to_break.flatten.shuffle[0..3]
+      code_to_break = code_to_break.flatten.shuffle[0..3]
+      puts code_to_break.inspect #needs to be deleted before evals
+    return code_to_break
   end
 
   def start_game
@@ -42,9 +47,15 @@ class Game
   end
 
   def end_time
+    @end_time = Time.now
+    @total_time = @end_time.to_i - @start_time.to_i
+    minutes = @total_time / 60
+    seconds = @total_time % 60
+    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds."
   end
 
   def end_game
+    end_time
     puts "That's All Folks."
     exit!
   end
@@ -67,6 +78,7 @@ class Game
     if @turn_counter == 0
       explain_colors
       query_user_guess
+      start_time
     else
       query_user_guess
     end
@@ -121,7 +133,7 @@ class Game
   end
 
   def check_near_match
-    copy_of_secret_code = @secret_code.dup  #This is the crux of the issue right here.
+    copy_of_secret_code = @secret_code.dup
 
     @user_guess.each do |color|
       if copy_of_secret_code.include?(color)
@@ -144,12 +156,3 @@ class Game
     @exact_counter = 0
   end
 end
-
-
-# reference to line 108: so some basic types of object in ruby are passed "by value",
-# meaning that if you run x = 123 then y = x, x and y will point to physically different addresses in your computer's memory
-# the value for x will occupy one space, and the value for y will occupy another
-# this is the case for true, false, nil, numbers, and symbols (symbols look like this: :symbol)
-# but for all other types of object, they're passed "by reference",
-# meaning that if you run x = [1, 2, 3] then y = x, x and y will point to the same address in memory
-# so modifying that array by calling x.delete_at(…) is the same as modifying that array by calling y.delete_at(…)
