@@ -1,4 +1,5 @@
 require './lib/code'
+require './lib/turn'
 
 class Game
   attr_reader :user_guess,
@@ -20,7 +21,7 @@ class Game
     @start_time = Time.now
     @code = Code.new
   end
-  
+
 
   def get_user_difficulty_choice
     puts "Choose your level of difficulty: (e)asy, (m)edium or (h)ard."
@@ -36,7 +37,7 @@ class Game
       @code.generate_medium_code
     when 'h', 'hard'
       @code.generate_hard_code
-    else 
+    else
       puts "I didn't understand your selection, please try again."
       get_user_difficulty_choice
     end
@@ -125,7 +126,7 @@ class Game
       end_game
     end
   end
-  
+
   def check_length
     if @user_guess.length == @code.secret_code.length
       check_exact_match
@@ -134,6 +135,7 @@ class Game
       query_user_guess
     end
   end
+end
 
   # def check_exact_match
   #   @user_guess.each_with_index do |char, index|
@@ -146,23 +148,23 @@ class Game
   #   else
   #     check_near_match
   #   end
-  # end
-
-  # def check_near_match
-  #   copy_of_secret_code = @code.secret_code.dup  
-  #   @user_guess.each do |color|
-  #     if copy_of_secret_code.include?(color)
-  #       @near_counter += 1
-  #       copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
-  #     end
-  #   end
-  #   @turn_counter += 1
-  #   puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
-  #   reset_counters
-  # end
-
-  def reset_counters
-    @exact_counter = 0
-    @near_counter = 0
-  end
-end
+#   # end
+#
+#   # def check_near_match
+#   #   copy_of_secret_code = @code.secret_code.dup
+#   #   @user_guess.each do |color|
+#   #     if copy_of_secret_code.include?(color)
+#   #       @near_counter += 1
+#   #       copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
+#   #     end
+#   #   end
+#   #   @turn_counter += 1
+#   #   puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
+#   #   reset_counters
+#   # end
+#
+#   def reset_counters
+#     @exact_counter = 0
+#     @near_counter = 0
+#   end
+# end
