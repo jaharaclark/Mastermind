@@ -114,7 +114,7 @@ class Game
   def query_user_guess
     puts "What's your guess?"
     @user_guess = gets.chomp.downcase.split("")
-    if !@user_guess.equal? ["t"] 
+    if (@user_guess <=> ["t"]) != 0 && (@user_guess <=> ["h","i","s","t","o","r","y"]) != 0
       @history << @user_guess.join("")
     end
 
