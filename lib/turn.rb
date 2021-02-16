@@ -13,14 +13,18 @@ class Turn
     @exact_counter = 0
   end
 
-  def reset_counters
-    @near_counter = 0
-    @exact_counter = 0
+  def near_counter_reset
+    near_counter = 0
+  end
+
+  def exact_counter_reset
+    exact_counter = 0
   end
 
   def check_exact_match
-    user_guess.each_with_index do |char, index|
-      if char == secret_code[index]
+    exact_counter_reset
+    @user_guess.each_with_index do |char, index|
+      if char == @secret_code[index]
         @exact_counter += 1
       end
     end
@@ -32,16 +36,16 @@ class Turn
   end
 
   def check_near_match
-    copy_of_secret_code = secret_code.dup  
-    user_guess.each do |color|
+    copy_of_secret_code = @secret_code.dup  
+    near_counter_reset
+    @user_guess.each do |color|
       if copy_of_secret_code.include?(color)
         @near_counter += 1
         copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
       end
     end
     @turn_counter += 1
-    puts "#{user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
-    reset_counters
+    puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
   end
 
 end
