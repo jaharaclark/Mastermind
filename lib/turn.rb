@@ -1,8 +1,11 @@
+require './lib/code'
+require './lib/game'
+
 class Turn
-  attr_reader :user_guess, 
-              :secret_code, 
-              :turn_counter, 
-              :near_counter, 
+  attr_reader :user_guess,
+              :secret_code,
+              :turn_counter,
+              :near_counter,
               :exact_counter
 
   def initialize(user_guess, secret_code)
@@ -19,7 +22,8 @@ class Turn
   end
 
   def check_exact_match
-    user_guess.each_with_index do |char, index|
+    reset_exact_counter
+    @user_guess.each_with_index do |char, index|
       if char == secret_code[index]
         @exact_counter += 1
       end
@@ -32,8 +36,9 @@ class Turn
   end
 
   def check_near_match
-    copy_of_secret_code = secret_code.dup  
-    user_guess.each do |color|
+    copy_of_secret_code = secret_code.dup
+    reset_near_counter
+    @user_guess.each do |color|
       if copy_of_secret_code.include?(color)
         @near_counter += 1
         copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
@@ -41,7 +46,14 @@ class Turn
     end
     @turn_counter += 1
     puts "#{user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
-    reset_counters
+  end
+
+  def reset_exact_counter
+    @exact_counter = 0
+  end
+
+  def reset_near_counter
+    @near_counter = 0
   end
 
 end
