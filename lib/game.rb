@@ -1,6 +1,4 @@
-require './lib/turn'
-require './lib/globe'
-require './lib/board'
+require './lib/code'
 
 class Game
   attr_reader :user_guess,
@@ -9,9 +7,10 @@ class Game
               :near_counter,
               :copy_of_secret_code,
               :turn_counter,
-              :difficulty_choice
+              :difficulty_choice,
               :start_time,
-              :total_time
+              :total_time,
+              :code
 
 
   def initialize
@@ -19,41 +18,9 @@ class Game
     @near_counter = 0
     @turn_counter = 0
     @start_time = Time.now
+    @code = Code.new
   end
   
-
-  def generate_easy_code
-    code_to_break = []
-    colors = ['b', 'g', 'r', 'y']
-      4.times do
-        code_to_break << colors.shuffle
-      end
-    @secret_code = code_to_break.flatten.shuffle[0..3]
-    puts @secret_code.inspect
-    return @secret_code
-  end
-
-  def generate_medium_code
-    code_to_break = []
-    colors = ['b', 'g', 'r', 'y', 'o']
-      6.times do
-        code_to_break << colors.shuffle
-      end
-    @secret_code = code_to_break.flatten.shuffle[0..5]
-    puts @secret_code.inspect
-    return @secret_code
-  end
-
-  def generate_hard_code
-    code_to_break = []
-    colors = ['b', 'g', 'r', 'y', 'o', 'w']
-      8.times do
-        code_to_break << colors.shuffle
-      end
-    @secret_code = code_to_break.flatten.shuffle[0..7]
-    puts @secret_code.inspect
-    return @secret_code
-  end
 
   def get_user_difficulty_choice
     puts "Choose your level of difficulty: (e)asy, (m)edium or (h)ard."
@@ -64,11 +31,11 @@ class Game
   def set_difficulty
     case difficulty_choice
     when 'e', 'easy'
-      generate_easy_code
+      @code.generate_easy_code
     when 'm', 'medium'
-      generate_medium_code
+      @code.generate_medium_code
     when 'h', 'hard'
-      generate_hard_code
+      @code.generate_hard_code
     else 
       puts "I didn't understand your selection, please try again."
       get_user_difficulty_choice
@@ -95,7 +62,7 @@ class Game
     @total_time = @end_time.to_i - @start_time.to_i
     minutes = @total_time / 60
     seconds = @total_time % 60
-    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds."
+    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds. \nYou took a total of #{@turn_counter} guess(es)."
   end
 
   def end_game
@@ -154,13 +121,13 @@ class Game
      if @user_guess == ['q'] || @user_guess == ["q", "u", "i", "t"]
       end_game
     elsif @user_guess == ['c'] || @user_guess == ["c", "h", "e", "a", "t"]
-      puts "secret code: #{secret_code}"
+      puts "secret code: #{code.secret_code}"
       end_game
     end
   end
   
   def check_length
-    if @user_guess.length == @secret_code.length
+    if @user_guess.length == @code.secret_code.length
       check_exact_match
     else
       puts "Your guess is invalid. Please try again."
@@ -168,39 +135,34 @@ class Game
     end
   end
 
-  def check_exact_match
-    # exact_counter_reset
-    @user_guess.each_with_index do |char, index|
-      if char == @secret_code[index]
-        @exact_counter += 1
-      end
-    end
-    if @exact_counter == 4
-      end_game
-    else
-      check_near_match
-    end
-  end
+  # def check_exact_match
+  #   @user_guess.each_with_index do |char, index|
+  #     if char == @code.secret_code[index]
+  #       @exact_counter += 1
+  #     end
+  #   end
+  #   if @exact_counter == 4 || @exact_counter == 6 || @exact_counter == 8
+  #     end_game
+  #   else
+  #     check_near_match
+  #   end
+  # end
 
-  def check_near_match
-    copy_of_secret_code = @secret_code.dup  
-    @user_guess.each do |color|
-      if copy_of_secret_code.include?(color)
-        @near_counter += 1
-        copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
-      end
-    end
-    @turn_counter += 1
-    puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
-    near_counter_reset
-    exact_counter_reset
-  end
+  # def check_near_match
+  #   copy_of_secret_code = @code.secret_code.dup  
+  #   @user_guess.each do |color|
+  #     if copy_of_secret_code.include?(color)
+  #       @near_counter += 1
+  #       copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
+  #     end
+  #   end
+  #   @turn_counter += 1
+  #   puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
+  #   reset_counters
+  # end
 
-  def near_counter_reset
-    @near_counter = 0
-  end
-
-  def exact_counter_reset
+  def reset_counters
     @exact_counter = 0
+    @near_counter = 0
   end
 end
