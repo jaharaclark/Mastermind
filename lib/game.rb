@@ -25,7 +25,7 @@ class Game
     @beginning_of_game = true
     @history = []
   end
-  
+
 
   def get_user_difficulty_choice
     puts "Choose your level of difficulty: (e)asy, (m)edium or (h)ard."
@@ -41,7 +41,7 @@ class Game
       @code.generate_medium_code
     when 'h', 'hard'
       @code.generate_hard_code
-    else 
+    else
       puts "I didn't understand your selection, please try again."
       get_user_difficulty_choice
     end
@@ -140,7 +140,7 @@ class Game
     query_user_guess
     end
   end
-  
+
   def check_length
     if @user_guess.length == @code.secret_code.length
       @turn = Turn.new(@user_guess,@code.secret_code)
@@ -154,6 +154,7 @@ class Game
       query_user_guess
     end
   end
+end
 
   def congratulate_winner
     puts "You cracked the secret code!"
