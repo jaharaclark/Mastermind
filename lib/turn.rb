@@ -1,3 +1,6 @@
+require './lib/code'
+require './lib/game'
+
 class Turn
   attr_reader :user_guess,
               :secret_code,
