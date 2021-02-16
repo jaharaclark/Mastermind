@@ -24,6 +24,7 @@ class Test < Minitest::Test
     assert_equal 0, @turn_easy.exact_counter
   end
 
+
   def test_it_can_reset_near_and_exact_counter
     @turn_easy.reset_near_counter
     @turn_easy.reset_exact_counter
@@ -37,6 +38,13 @@ class Test < Minitest::Test
 
     assert_equal 2, @turn_easy.exact_counter
   end
+  
+  def test_check_easy_near_match
+    @turn_easy.check_exact_match
+
+    assert_equal 3, @turn_easy.near_counter
+  end  
+end
 
   def test_it_can_check_easy_near_match
     @turn_easy.check_near_match
