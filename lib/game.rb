@@ -1,4 +1,5 @@
 require './lib/code'
+require './lib/turn'
 
 class Game
   attr_reader :user_guess,
@@ -10,7 +11,9 @@ class Game
               :difficulty_choice,
               :start_time,
               :total_time,
-              :code
+              :code,
+              :beginning_of_game
+              :history
 
 
   def initialize
@@ -19,12 +22,14 @@ class Game
     @turn_counter = 0
     @start_time = Time.now
     @code = Code.new
+    @beginning_of_game = true
+    @history = []
   end
   
 
   def get_user_difficulty_choice
     puts "Choose your level of difficulty: (e)asy, (m)edium or (h)ard."
-    @difficulty_choice = gets.chomp
+    @difficulty_choice = gets.chomp.downcase
     set_difficulty
   end
 
@@ -45,7 +50,7 @@ class Game
   def start_game
     puts "Welcome to MASTERMIND \nWould you like to (p)lay, read the (i)nstructions or (q)uit?"
 
-    input = gets.chomp
+    input = gets.chomp.downcase
 
     until input == 'q' || input == 'quit' do
      do_something(input)
@@ -62,7 +67,7 @@ class Game
     @total_time = @end_time.to_i - @start_time.to_i
     minutes = @total_time / 60
     seconds = @total_time % 60
-    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds. \nYou took a total of #{@turn_counter} guess(es)."
+    puts "Your total time is #{minutes.round(2)} minutes and #{seconds.round(2)} seconds. \nYou took a total of #{@turn.turn_counter} guess(es)."
   end
 
   def end_game
@@ -86,10 +91,11 @@ class Game
   end
 
   def play
-    if @turn_counter == 0
+    if @beginning_of_game == true
       get_user_difficulty_choice
       explain_colors
       start_time
+      @beginning_of_game = false
     end
     query_user_guess
   end
@@ -107,7 +113,10 @@ class Game
 
   def query_user_guess
     puts "What's your guess?"
-    @user_guess = gets.chomp.split("")
+    @user_guess = gets.chomp.downcase.split("")
+    if !@user_guess.equal? ["t"] 
+      @history << @user_guess.join("")
+    end
 
     validate_guess
   end
@@ -118,51 +127,36 @@ class Game
   end
 
   def check_for_quit_or_cheat
-     if @user_guess == ['q'] || @user_guess == ["q", "u", "i", "t"]
+     if @user_guess == ["q"] || @user_guess == ["q", "u", "i", "t"]
       end_game
-    elsif @user_guess == ['c'] || @user_guess == ["c", "h", "e", "a", "t"]
+    elsif @user_guess == ["c"] || @user_guess == ["c", "h", "e", "a", "t"]
       puts "secret code: #{code.secret_code}"
       end_game
+    elsif @user_guess == ["t"] || @user_guess == ["h","i","s","t","o","r","y"]
+      puts "Player Guess History:"
+      @history.each do |guess|
+        puts guess
+      end
+    query_user_guess
     end
   end
   
   def check_length
     if @user_guess.length == @code.secret_code.length
-      check_exact_match
+      @turn = Turn.new(@user_guess,@code.secret_code)
+      turn_result = @turn.check_exact_match
+      if turn_result == "Congratulate Winner"
+        congratulate_winner
+        end_game
+      end
     else
       puts "Your guess is invalid. Please try again."
       query_user_guess
     end
   end
 
-  # def check_exact_match
-  #   @user_guess.each_with_index do |char, index|
-  #     if char == @code.secret_code[index]
-  #       @exact_counter += 1
-  #     end
-  #   end
-  #   if @exact_counter == 4 || @exact_counter == 6 || @exact_counter == 8
-  #     end_game
-  #   else
-  #     check_near_match
-  #   end
-  # end
-
-  # def check_near_match
-  #   copy_of_secret_code = @code.secret_code.dup  
-  #   @user_guess.each do |color|
-  #     if copy_of_secret_code.include?(color)
-  #       @near_counter += 1
-  #       copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
-  #     end
-  #   end
-  #   @turn_counter += 1
-  #   puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
-  #   reset_counters
-  # end
-
-  def reset_counters
-    @exact_counter = 0
-    @near_counter = 0
+  def congratulate_winner
+    puts "You cracked the secret code!"
   end
+
 end

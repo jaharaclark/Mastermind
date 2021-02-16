@@ -22,6 +22,7 @@ class Turn
   end
 
   def check_exact_match
+    @turn_counter += 1
     exact_counter_reset
     @user_guess.each_with_index do |char, index|
       if char == @secret_code[index]
@@ -29,7 +30,7 @@ class Turn
       end
     end
     if @exact_counter == 4 || @exact_counter == 6 || @exact_counter == 8
-      end_game
+       "Congratulate Winner"
     else
       check_near_match
     end
@@ -44,7 +45,6 @@ class Turn
         copy_of_secret_code.delete_at(copy_of_secret_code.index(color))
       end
     end
-    @turn_counter += 1
     puts "#{@user_guess} has #{@near_counter} of the correct elements with #{@exact_counter} in the correct positions. You've taken #{@turn_counter} guess(es)."
   end
 
