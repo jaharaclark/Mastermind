@@ -20,15 +20,14 @@ class Test < Minitest::Test
 
   def test_it_can_reset_near_and_exact_counter
     @turn_easy.reset_counters
-    
+
     assert_equal 0, @turn_easy.near_counter
     assert_equal 0, @turn_easy.exact_counter
   end
 
-  def test_it_can_check_easy_match
+  def test_it_can_check_easy_exact_match
     @turn_easy.check_exact_match
-    
-    require 'pry'; binding.pry
+
     assert_equal 2, @turn_easy.exact_counter
   end
 

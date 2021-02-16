@@ -20,7 +20,7 @@ class Game
     @start_time = Time.now
     @code = Code.new
   end
-  
+
 
   def get_user_difficulty_choice
     puts "Choose your level of difficulty: (e)asy, (m)edium or (h)ard."
@@ -36,7 +36,7 @@ class Game
       @code.generate_medium_code
     when 'h', 'hard'
       @code.generate_hard_code
-    else 
+    else
       puts "I didn't understand your selection, please try again."
       get_user_difficulty_choice
     end
@@ -111,7 +111,7 @@ class Game
 
     validate_guess
   end
-
+  
   def validate_guess
     check_for_quit_or_cheat
     check_length
@@ -125,7 +125,7 @@ class Game
       end_game
     end
   end
-  
+
   def check_length
     if @user_guess.length == @code.secret_code.length
       check_exact_match
@@ -149,7 +149,7 @@ class Game
   # end
 
   # def check_near_match
-  #   copy_of_secret_code = @code.secret_code.dup  
+  #   copy_of_secret_code = @code.secret_code.dup
   #   @user_guess.each do |color|
   #     if copy_of_secret_code.include?(color)
   #       @near_counter += 1
