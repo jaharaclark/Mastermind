@@ -8,8 +8,6 @@ class Code
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..3]
-    puts @secret_code.inspect
-    return @secret_code
   end
 
   def generate_medium_code
@@ -19,8 +17,6 @@ class Code
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..5]
-    puts @secret_code.inspect
-    return @secret_code
   end
 
   def generate_hard_code
@@ -30,7 +26,5 @@ class Code
         code_to_break << colors.shuffle
       end
     @secret_code = code_to_break.flatten.shuffle[0..7]
-    puts @secret_code.inspect
-    return @secret_code
   end
 end
