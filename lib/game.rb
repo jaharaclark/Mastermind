@@ -24,8 +24,6 @@ class Game
     @code = Code.new
     @beginning_of_game = true
     @history = []
-    @minutes = 0
-    @seconds = 0
   end
 
 
@@ -65,7 +63,7 @@ class Game
     when 'p', 'play'
       play
     when 'i', 'instructions'
-      puts "Info, info, info."
+      puts "----------MASTERMIND INSTRUCTIONS----------\nMastermind is a codebreaking game designed for a single player to crack the computer's code. Upon choosing to play the game, the player decides on the complexity of the code they will attempt to break: easy yields a four character code containing four colors that may be repeated, medium yields a six character code containing five colors, at least one of which will be repeated and hard yields an eight character code containing six colors, at least one of which will be repeated. \n\nOnce the player has chosen their level of difficulty, the computer asks the user for their guess, which they will enter in as a single line of characters in either lower or uppercase (xxxx or XXXXXX). The computer will check the player's guess against it's secret code. \n\nIn the event that they player correctly guesses the code, the computer will congratulate the player, displaying the code, the number of guesses the player made and the elapsed time. In the event the player is incorrect,  the computer will inform the player of the number of correct characters they guessed and how many are in the correct positions, respectively.\n\nThe game continues until either the player wins, the player enters (c)heat, causing the computer to display the secret code, or the player gives up and quits the game altogether.\n----------END OF INSTRUCTIONS----------"
       start_game
     else
       puts "You've made an invalid selection. Please either (p)lay, read the (i)nstructions or (q)uit."
@@ -116,10 +114,11 @@ class Game
       puts "secret code: #{code.secret_code}"
       end_game
     elsif @user_guess == ["t"] || @user_guess == ["h","i","s","t","o","r","y"]
-      puts "Player Guess History:"
+      puts "----------PLAYER GUESS HISTORY----------"
       @history.each do |guess|
         puts guess
       end
+      puts "----------END OF HISTORY----------"
       query_user_guess
     end
   end
@@ -152,7 +151,7 @@ class Game
     @total_time = @end_time.to_i - @start_time.to_i
     @minutes = @total_time / 60
     @seconds = @total_time % 60
-    puts "Congratulations! You've guessed the sequence #{@code.secret_code} in #{@turn_counter} guesses over  #{minutes.round(2)} minutes, #{seconds.round(2)} seconds."
+    puts "----------GAME REPORT----------\nCongratulations! You've guessed the sequence #{@code.secret_code} in #{@turn_counter} guesses over  #{minutes.round(2)} minutes, #{seconds.round(2)} seconds."
   end
   
   def congratulate_winner
