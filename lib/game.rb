@@ -63,7 +63,7 @@ class Game
     when 'p', 'play'
       play
     when 'i', 'instructions'
-      puts "----------MASTERMIND INSTRUCTIONS----------\nMastermind is a codebreaking game designed for a single player to crack the computer's code. Upon choosing to play the game, the player decides on the complexity of the code they will attempt to break: easy yields a four character code containing four colors that may be repeated, medium yields a six character code containing five colors, at least one of which will be repeated and hard yields an eight character code containing six colors, at least one of which will be repeated. \n\nOnce the player has chosen their level of difficulty, the computer asks the user for their guess, which they will enter in as a single line of characters in either lower or uppercase (xxxx or XXXXXX). The computer will check the player's guess against it's secret code. \n\nIn the event that they player correctly guesses the code, the computer will congratulate the player, displaying the code, the number of guesses the player made and the elapsed time. In the event the player is incorrect,  the computer will inform the player of the number of correct characters they guessed and how many are in the correct positions, respectively.\n\nThe game continues until either the player wins, the player enters (c)heat, causing the computer to display the secret code, or the player gives up and quits the game altogether.\n----------END OF INSTRUCTIONS----------"
+      puts "----------MASTERMIND INSTRUCTIONS----------\nMastermind is a codebreaking game designed for a single player to crack the computer's code. Upon choosing to (p)lay the game, the player decides on the complexity of the code they will attempt to break: easy yields a four character code containing four colors that may be repeated, medium yields a six character code containing five colors, at least one of which will be repeated and hard yields an eight character code containing six colors, at least one of which will be repeated. \n\nOnce the player has chosen their level of difficulty, the computer asks the user for their guess, which they will enter in as a single line of characters in either lower or uppercase (xxxx or XXXXXX). The computer will check the player's guess against it's secret code. \n\nIn the event that they player correctly guesses the code, the computer will congratulate the player, displaying the code, the number of guesses the player made and the elapsed time. In the event the player is incorrect,  the computer will inform the player of the number of correct characters they guessed and how many are in the correct positions, respectively. At any time, the player may ask for the his(t)ory, revealing a complete list of the player's previous guesses.\n\nThe game continues until either the player wins, the player enters (c)heat, causing the computer to display the secret code, or the player gives up and quits the game altogether.\n----------END OF INSTRUCTIONS----------"
       start_game
     else
       puts "You've made an invalid selection. Please either (p)lay, read the (i)nstructions or (q)uit."
@@ -98,14 +98,15 @@ class Game
     if (@user_guess <=> ["t"]) != 0 && (@user_guess <=> ["h","i","s","t","o","r","y"]) != 0
       @history << @user_guess.join("")
     end
-    
-    validate_guess
+    if check_for_quit_or_cheat != "Break Please"
+      check_length
+    end
   end
   
-  def validate_guess
-    check_for_quit_or_cheat
-    check_length
-  end
+  # def validate_guess
+  #   check_for_quit_or_cheat
+  #   check_length
+  # end
   
   def check_for_quit_or_cheat
     if @user_guess == ["q"] || @user_guess == ["q", "u", "i", "t"]
@@ -120,6 +121,7 @@ class Game
       end
       puts "----------END OF HISTORY----------"
       query_user_guess
+      "Break Please"
     end
   end
   
@@ -156,6 +158,7 @@ class Game
   
   def congratulate_winner
     end_time
+    @turn_counter = 0
     puts "Do you want to (p)lay again or (q)uit?"
     
     user_request = gets.chomp
